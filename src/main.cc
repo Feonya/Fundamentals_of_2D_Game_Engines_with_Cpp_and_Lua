@@ -1,10 +1,21 @@
 #include <iostream>
+#include "constants.h"
+#include "Game.h"
 
 int main(int argc, char* argv[])
 {
-  // TODO:
-  // Game* game = new Game();
+  Game* game = new Game();
 
-  std::cout << "Game is running..." << std::endl;
+  game->Initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
+
+  while (game->IsRunning())
+  {
+    game->HandleInput();
+    game->Update();
+    game->Render();
+  }
+
+  game->Destroy();
+
   return 0;
 }
