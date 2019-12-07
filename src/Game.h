@@ -20,6 +20,7 @@ class Game {
     SDL_Window*   window_;
     SDL_Renderer* renderer_;
     bool          is_running_;
+    int           ticks_last_frame_;
 };
 
 #endif
