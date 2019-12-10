@@ -12,8 +12,8 @@ class AssetManager;
 
 class Game {
   public:
-    static SDL_Renderer* renderer;
-    static AssetManager* assetManager;
+    static SDL_Renderer* m_renderer;
+    static AssetManager* m_assetManager;
 
     Game();
     ~Game();

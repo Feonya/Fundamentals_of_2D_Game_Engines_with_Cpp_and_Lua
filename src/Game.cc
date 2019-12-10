@@ -7,8 +7,8 @@
 #include "components/SpriteComponent.h"
 
 EntityManager g_manager;
-AssetManager* Game::assetManager = new AssetManager(&g_manager);
-SDL_Renderer* Game::renderer;
+AssetManager* Game::m_assetManager = new AssetManager(&g_manager);
+SDL_Renderer* Game::m_renderer;
 
 Game::Game() : m_isRunning(false) {}
 
@@ -35,8 +35,8 @@ void Game::Initialize(int f_width, int f_height)
     return;
   }
 
-  renderer = SDL_CreateRenderer(m_window, -1, 0);
-  if (!renderer)
+  m_renderer = SDL_CreateRenderer(m_window, -1, 0);
+  if (!m_renderer)
   {
     std::cerr << "Error creating SDL renderer." << std::endl;
     return;
@@ -52,29 +52,29 @@ void Game::LoadLevel(int f_levelNumber)
 {
   // Start including new assets to the assetManager list.
 
-  std::string l_textureFilePath = "assets/images/tank-big-right.png";
-  assetManager->AddTexture("tank-image", l_textureFilePath.c_str());
+  std::string textureFilePath = "assets/images/tank-big-right.png";
+  m_assetManager->AddTexture("tank-image", textureFilePath.c_str());
 
   // Start including entities and also components to them.
 
-  Entity& l_newEntity(g_manager.AddEntity("tank"));
-  l_newEntity.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
-  l_newEntity.AddComponent<SpriteComponent>("tank-image");
+  Entity& newEntity(g_manager.AddEntity("tank"));
+  newEntity.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
+  newEntity.AddComponent<SpriteComponent>("tank-image");
 }
 
 void Game::HandleInput()
 {
-  SDL_Event l_event;
-  SDL_PollEvent(&l_event);
+  SDL_Event event;
+  SDL_PollEvent(&event);
 
-  switch (l_event.type)
+  switch (event.type)
   {
     case SDL_QUIT:
       m_isRunning = false;
       break;
 
     case SDL_KEYDOWN:
-      if (l_event.key.keysym.sym == SDLK_ESCAPE)
+      if (event.key.keysym.sym == SDLK_ESCAPE)
         m_isRunning = false;
       break;
 
@@ -89,30 +89,30 @@ void Game::Update()
   while (!SDL_TICKS_PASSED(SDL_GetTicks(), m_ticksLastFrame + k_frameTargetTime));
 
   // Delta time is the difference in ticks from last frame converted to seconds.
-  float l_deltaTime = (SDL_GetTicks() - m_ticksLastFrame) / 1000.f;
+  float deltaTime = (SDL_GetTicks() - m_ticksLastFrame) / 1000.f;
   // Clamp deltaTime to a maximum value.
-  l_deltaTime = l_deltaTime > .05f ? .05f : l_deltaTime;
+  deltaTime = deltaTime > .05f ? .05f : deltaTime;
 
   // Sets the new ticks form the current frame to be used in the next pass.
   m_ticksLastFrame = SDL_GetTicks();
 
-  g_manager.Update(l_deltaTime);
+  g_manager.Update(deltaTime);
 }
 
 void Game::Render()
 {
-  SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
-  SDL_RenderClear(renderer);
+  SDL_SetRenderDrawColor(m_renderer, 21, 21, 21, 255);
+  SDL_RenderClear(m_renderer);
 
   if (g_manager.HasNoEntities()) return;
   g_manager.Render();
 
-  SDL_RenderPresent(renderer);
+  SDL_RenderPresent(m_renderer);
 }
 
 void Game::Destroy()
 {
-  SDL_DestroyRenderer(renderer);
+  SDL_DestroyRenderer(m_renderer);
   SDL_DestroyWindow(m_window);
   SDL_Quit();
 }

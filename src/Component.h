@@ -5,7 +5,8 @@ class Entity;
 
 class Component {
   public:
-    Entity* owner;
+    Entity* m_owner;
+
     virtual ~Component() {}
     virtual void Initialize() {}
     virtual void Update(float deltaTime) {}

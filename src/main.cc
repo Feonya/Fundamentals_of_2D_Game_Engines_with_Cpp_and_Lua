@@ -4,18 +4,18 @@
 
 int main(int argc, char* argv[])
 {
-  Game* l_game = new Game();
+  Game* game = new Game();
 
-  l_game->Initialize(k_windowWidth, k_windowHeight);
+  game->Initialize(k_windowWidth, k_windowHeight);
 
-  while (l_game->IsRunning())
+  while (game->IsRunning())
   {
-    l_game->HandleInput();
-    l_game->Update();
-    l_game->Render();
+    game->HandleInput();
+    game->Update();
+    game->Render();
   }
 
-  l_game->Destroy();
+  game->Destroy();
 
   return 0;
 }

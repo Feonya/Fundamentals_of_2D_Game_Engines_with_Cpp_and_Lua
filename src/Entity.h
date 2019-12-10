@@ -12,7 +12,7 @@ class EntityManager;
 
 class Entity {
   public:
-    std::string name;
+    std::string m_name;
 
     Entity(EntityManager& f_manager);
     Entity(EntityManager& f_manager, std::string f_name);
@@ -25,12 +25,12 @@ class Entity {
     template<typename T, typename... TArgs>
     T& AddComponent(TArgs&&... f_args)
     {
-      T* l_newComponent(new T(std::forward<TArgs>(f_args)...));
-      l_newComponent->owner = this;
-      m_components.emplace_back(l_newComponent);
-      m_componentTypeMap[&typeid(*l_newComponent)] = l_newComponent;
-      l_newComponent->Initialize();
-      return *l_newComponent;
+      T* newComponent(new T(std::forward<TArgs>(f_args)...));
+      newComponent->m_owner = this;
+      m_components.emplace_back(newComponent);
+      m_componentTypeMap[&typeid(*newComponent)] = newComponent;
+      newComponent->Initialize();
+      return *newComponent;
     }
 
     template<typename T>
