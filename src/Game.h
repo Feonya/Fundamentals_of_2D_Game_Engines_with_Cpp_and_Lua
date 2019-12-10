@@ -8,23 +8,28 @@
 #include "EntityManager.h"
 #include "Component.h"
 
+class AssetManager;
+
 class Game {
   public:
-    static SDL_Renderer* Renderer;
+    static SDL_Renderer* renderer;
+    static AssetManager* assetManager;
+
     Game();
     ~Game();
+
     bool IsRunning() const;
-    void Initialize(int width, int height);
-    void LoadLevel(int levelNumber);
+    void Initialize(int f_width, int f_height);
+    void LoadLevel(int f_levelNumber);
     void HandleInput();
     void Update();
     void Render();
     void Destroy();
 
   private:
-    SDL_Window* window_;
-    bool is_running_;
-    int ticks_last_frame_;
+    SDL_Window* m_window;
+    bool m_isRunning;
+    int m_ticksLastFrame;
 };
 
 #endif

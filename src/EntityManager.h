@@ -8,15 +8,15 @@
 class EntityManager {
   public:
     void ClearData();
-    void Update(float deltaTime);
+    void Update(float f_deltaTime);
     void Render();
     bool HasNoEntities();
-    Entity& AddEntity(std::string entityName);
+    Entity& AddEntity(std::string f_entityName);
     std::vector<Entity*> GetEntities() const;
     unsigned int GetEntityCount();
 
   private:
-    std::vector<Entity*> entities_;
+    std::vector<Entity*> m_entities;
 };
 
 #endif

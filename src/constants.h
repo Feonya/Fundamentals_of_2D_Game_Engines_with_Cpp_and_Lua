@@ -1,10 +1,10 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-const unsigned int kWindowWidth   = 800;
-const unsigned int kWindowHeight = 600;
+const unsigned int k_windowWidth   = 800;
+const unsigned int k_windowHeight = 600;
 
-const unsigned int kFps = 60;
-const unsigned int kFrameTargetTime = 1000 / kFps;
+const unsigned int k_fps = 60;
+const unsigned int k_frameTargetTime = 1000 / k_fps;
 
 #endif

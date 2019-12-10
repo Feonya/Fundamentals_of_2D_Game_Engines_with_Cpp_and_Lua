@@ -2,43 +2,38 @@
 #define TRANSFORMCOMPONENT_H
 
 #include <SDL2/SDL.h>
-#include "EntityManager.h"
 #include "glm/glm.hpp"
-#include "Game.h"
+#include "../EntityManager.h"
+#include "../Game.h"
 
 class TransformComponent : public Component {
   public:
-    glm::vec2 Position;
-    glm::vec2 Velocity;
-    int Width;
-    int Height;
-    int Scale;
+    glm::vec2 position;
+    glm::vec2 velocity;
+    int width;
+    int height;
+    int scale;
 
-    TransformComponent(int posX, int posY, int velX, int velY, int w, int h, int s)
+    TransformComponent(int f_posX, int f_posY, int f_velX, int f_velY, int f_w, int f_h, int f_s)
     {
-      Position = glm::vec2(posX, posY);
-      Velocity = glm::vec2(velX, velY);
-      Width    = w;
-      Height   = h;
-      Scale    = s;
+      position = glm::vec2(f_posX, f_posY);
+      velocity = glm::vec2(f_velX, f_velY);
+      width    = f_w;
+      height   = f_h;
+      scale    = f_s;
     }
 
     void Initialize() override
     {
     }
 
-    void Update(float deltaTime) override
+    void Update(float f_deltaTime) override
     {
-      Position.x += Velocity.x * deltaTime;
-      Position.y += Velocity.y * deltaTime;
+      position.x += velocity.x * f_deltaTime;
+      position.y += velocity.y * f_deltaTime;
     }
 
-    void Render() override
-    {
-      SDL_Rect transformRectangle {(int)Position.x, (int)Position.y, Width, Height};
-      SDL_SetRenderDrawColor(Game::Renderer, 255, 255, 255, 255);
-      SDL_RenderFillRect(Game::Renderer, &transformRectangle);
-    }
+    void Render() override {}
 
 };
 

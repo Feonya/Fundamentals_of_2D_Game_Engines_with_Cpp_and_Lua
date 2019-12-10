@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <map>
 #include "EntityManager.h"
 #include "Component.h"
 
@@ -11,29 +12,38 @@ class EntityManager;
 
 class Entity {
   public:
-    std::string Name;
-    Entity(EntityManager& manager);
-    Entity(EntityManager& manager, std::string name);
-    void Update(float deltaTime);
+    std::string name;
+
+    Entity(EntityManager& f_manager);
+    Entity(EntityManager& f_manager, std::string f_name);
+
+    void Update(float f_deltaTime);
     void Render();
     void Destroy();
     bool IsActive() const;
 
     template<typename T, typename... TArgs>
-    T& AddComponent(TArgs&&... args)
+    T& AddComponent(TArgs&&... f_args)
     {
-      T* newComponent(new T(std::forward<TArgs>(args)...));
-      newComponent->Owner = this;
-      components_.emplace_back(newComponent);
-      newComponent->Initialize();
+      T* l_newComponent(new T(std::forward<TArgs>(f_args)...));
+      l_newComponent->owner = this;
+      m_components.emplace_back(l_newComponent);
+      m_componentTypeMap[&typeid(*l_newComponent)] = l_newComponent;
+      l_newComponent->Initialize();
+      return *l_newComponent;
+    }
 
-      return *newComponent;
+    template<typename T>
+    T* GetComponent()
+    {
+      return static_cast<T*>(m_componentTypeMap[&typeid(T)]);
     }
 
   private:
-    EntityManager& manager_;
-    std::vector<Component*> components_;
-    bool is_active_;
+    EntityManager& m_manager;
+    bool m_isActive;
+    std::vector<Component*> m_components;
+    std::map<const std::type_info*, Component*> m_componentTypeMap;
 };
 
 #endif
