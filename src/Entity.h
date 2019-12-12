@@ -39,10 +39,19 @@ class Entity {
       return static_cast<T*>(m_componentTypeMap[&typeid(T)]);
     }
 
+    template<typename T>
+    bool HasComponent() const
+    {
+      // TODO
+      return true;
+    }
+
+    void ListAllComponents() const;
+
   private:
     EntityManager& m_manager;
     bool m_isActive;
-    std::vector<Component*> m_components;
+    std::vector<Component*>                     m_components;
     std::map<const std::type_info*, Component*> m_componentTypeMap;
 };
 

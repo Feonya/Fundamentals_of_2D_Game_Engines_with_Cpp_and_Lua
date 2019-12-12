@@ -51,15 +51,25 @@ void Game::Initialize(int f_width, int f_height)
 void Game::LoadLevel(int f_levelNumber)
 {
   // Start including new assets to the assetManager list.
-
-  std::string textureFilePath = "assets/images/tank-big-right.png";
-  m_assetManager->AddTexture("tank-image", textureFilePath.c_str());
+  m_assetManager->AddTexture("tank-image",
+      std::string("assets/images/tank-big-right.png").c_str());
+  m_assetManager->AddTexture("chopper-image",
+      std::string("assets/images/chopper-spritesheet.png").c_str());
+  m_assetManager->AddTexture("radar-image",
+      std::string("assets/images/radar.png").c_str());
 
   // Start including entities and also components to them.
+  Entity& tankEntity(g_manager.AddEntity("tank"));
+  tankEntity.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
+  tankEntity.AddComponent<SpriteComponent>("tank-image");
 
-  Entity& newEntity(g_manager.AddEntity("tank"));
-  newEntity.AddComponent<TransformComponent>(0, 0, 20, 20, 32, 32, 1);
-  newEntity.AddComponent<SpriteComponent>("tank-image");
+  Entity& chopperEntity(g_manager.AddEntity("chopper"));
+  chopperEntity.AddComponent<TransformComponent>(240, 106, 0, 0, 32, 32, 1);
+  chopperEntity.AddComponent<SpriteComponent>("chopper-image", 2, 90, true, false);
+
+  Entity& radarEntity(g_manager.AddEntity("Radar"));
+  radarEntity.AddComponent<TransformComponent>(720, 15, 0, 0, 64, 64, 1);
+  radarEntity.AddComponent<SpriteComponent>("radar-image", 8, 150, false, true);
 }
 
 void Game::HandleInput()

@@ -29,7 +29,7 @@ class Game {
   private:
     SDL_Window* m_window;
     bool m_isRunning;
-    int m_ticksLastFrame;
+    int  m_ticksLastFrame;
 };
 
 #endif
