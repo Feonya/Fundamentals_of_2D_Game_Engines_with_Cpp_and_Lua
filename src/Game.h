@@ -12,8 +12,9 @@ class AssetManager;
 
 class Game {
   public:
-    static SDL_Renderer* m_renderer;
-    static AssetManager* m_assetManager;
+    static SDL_Renderer* renderer;
+    static AssetManager* assetManager;
+    static SDL_Event     event;
 
     Game();
     ~Game();
@@ -27,9 +28,9 @@ class Game {
     void Destroy();
 
   private:
-    SDL_Window* m_window;
-    bool m_isRunning;
-    int  m_ticksLastFrame;
+    SDL_Window* window;
+    bool isRunning;
+    int  ticksLastFrame;
 };
 
 #endif

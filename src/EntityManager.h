@@ -18,7 +18,7 @@ class EntityManager {
     void ListAllEntities() const;
 
   private:
-    std::vector<Entity*> m_entities;
+    std::vector<Entity*> entities;
 };
 
 #endif

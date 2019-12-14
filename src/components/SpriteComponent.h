@@ -9,102 +9,102 @@
 
 class SpriteComponent : public Component {
   public:
-    SDL_RendererFlip m_spriteFlip = SDL_FLIP_NONE;
+    SDL_RendererFlip spriteFlip = SDL_FLIP_NONE;
 
     SpriteComponent(std::string f_assetTextureId)
     {
-      m_isAnimated = false;
-      m_isFixed    = false;
+      isAnimated = false;
+      isFixed    = false;
       SetTexture(f_assetTextureId);
     }
 
     SpriteComponent(std::string f_id, int f_numFrames, int f_animationSpeed, bool f_hasDirections,
         bool f_isFixed) :
-        m_numFrames(f_numFrames), m_animationSpeed(f_animationSpeed), m_isFixed(f_isFixed)
+        numFrames(f_numFrames), aniamtionSpeed(f_animationSpeed), isFixed(f_isFixed)
     {
-      m_isAnimated = true;
+      isAnimated = true;
 
       if (f_hasDirections)
       {
-        Animation downAnimation (0, f_numFrames, f_animationSpeed);
-        Animation rightAnimation(1, f_numFrames, f_animationSpeed);
-        Animation leftAnimation (2, f_numFrames, f_animationSpeed);
-        Animation upAnimation   (3, f_numFrames, f_animationSpeed);
+        Animation l_downAnimation (0, f_numFrames, f_animationSpeed);
+        Animation l_rightAnimation(1, f_numFrames, f_animationSpeed);
+        Animation l_leftAnimation (2, f_numFrames, f_animationSpeed);
+        Animation l_upAnimation   (3, f_numFrames, f_animationSpeed);
 
-        m_animations.emplace("DownAnimation" , downAnimation);
-        m_animations.emplace("RightAnimation", rightAnimation);
-        m_animations.emplace("LeftAnimation" , leftAnimation);
-        m_animations.emplace("UpAnimation"   , upAnimation);
+        animations.emplace("DownAnimation" , l_downAnimation);
+        animations.emplace("RightAnimation", l_rightAnimation);
+        animations.emplace("LeftAnimation" , l_leftAnimation);
+        animations.emplace("UpAnimation"   , l_upAnimation);
 
-        m_currentAnimationName = "DownAnimation";
-        m_animationIndex = 0;
+        currentAnimationName = "DownAnimation";
+        animationIndex = 0;
       }
       else
       {
-        Animation singleAnimation(0, f_numFrames, f_animationSpeed);
-        m_animations.emplace("SingleAnimation", singleAnimation);
-        m_currentAnimationName = "SingleAnimation";
-        m_animationIndex = 0;
+        Animation l_singleAnimation(0, f_numFrames, f_animationSpeed);
+        animations.emplace("SingleAnimation", l_singleAnimation);
+        currentAnimationName = "SingleAnimation";
+        animationIndex = 0;
       }
 
-      Play(m_currentAnimationName);
+      Play(currentAnimationName);
 
       SetTexture(f_id);
     }
 
     void Play(std::string f_animationName)
     {
-      m_numFrames            = m_animations[f_animationName].m_numFrames;
-      m_animationIndex       = m_animations[f_animationName].m_index;
-      m_animationSpeed       = m_animations[f_animationName].m_animationSpeed;
-      m_currentAnimationName = f_animationName;
+      numFrames            = animations[f_animationName].numFrames;
+      animationIndex       = animations[f_animationName].index;
+      aniamtionSpeed       = animations[f_animationName].animationSpeed;
+      currentAnimationName = f_animationName;
     }
 
     void SetTexture(std::string f_assetTextureId)
     {
-      m_texture = Game::m_assetManager->GetTexture(f_assetTextureId);
+      texture = Game::assetManager->GetTexture(f_assetTextureId);
     }
 
     void Initialize() override
     {
-      m_transform = m_owner->GetComponent<TransformComponent>();
-      m_sourceRectangle.x = 0;
-      m_sourceRectangle.y = 0;
-      m_sourceRectangle.w = m_transform->m_width;
-      m_sourceRectangle.h = m_transform->m_height;
+      transform = owner->GetComponent<TransformComponent>();
+      sourceRectangle.x = 0;
+      sourceRectangle.y = 0;
+      sourceRectangle.w = transform->width;
+      sourceRectangle.h = transform->height;
     }
 
     void Update(float f_deltaTime) override
     {
-      if (m_isAnimated)
-        m_sourceRectangle.x =
-            static_cast<int>(SDL_GetTicks() / m_animationSpeed) % m_numFrames * m_sourceRectangle.w;
-      m_sourceRectangle.y = m_animationIndex * m_transform->m_height;
+      if (isAnimated)
+        sourceRectangle.x =
+            static_cast<int>(SDL_GetTicks() / aniamtionSpeed) % numFrames * sourceRectangle.w;
+      sourceRectangle.y = animationIndex * transform->height;
 
-      m_destinationRectangle.x = static_cast<int>(m_transform->m_position.x);
-      m_destinationRectangle.y = static_cast<int>(m_transform->m_position.y);
-      m_destinationRectangle.w = m_transform->m_width  * m_transform->m_scale;
-      m_destinationRectangle.h = m_transform->m_height * m_transform->m_scale;
+      destinationRectangle.x = static_cast<int>(transform->position.x);
+      destinationRectangle.y = static_cast<int>(transform->position.y);
+      destinationRectangle.w = transform->width  * transform->scale;
+      destinationRectangle.h = transform->height * transform->scale;
     }
 
     void Render()
     {
-      TextureManager::Draw(m_texture, m_sourceRectangle, m_destinationRectangle, m_spriteFlip);
+      TextureManager::Draw(texture, sourceRectangle, destinationRectangle, spriteFlip);
     }
 
   private:
-    TransformComponent* m_transform;
-    SDL_Texture* m_texture;
-    SDL_Rect     m_sourceRectangle;
-    SDL_Rect     m_destinationRectangle;
+    TransformComponent* transform;
+    SDL_Texture* texture;
+    SDL_Rect     sourceRectangle;
+    SDL_Rect     destinationRectangle;
 
-    bool m_isAnimated;
-    int  m_numFrames;
-    int  m_animationSpeed;
-    bool m_isFixed;
-    std::map<std::string, Animation> m_animations;
-    std::string                      m_currentAnimationName;
-    unsigned                         m_animationIndex = 0;
+    bool isAnimated;
+    int  numFrames;
+    int  aniamtionSpeed;
+    bool isFixed;
+    std::map<std::string, Animation> animations;
+    std::string                      currentAnimationName;
+    unsigned                         animationIndex = 0;
 };
 
 #endif

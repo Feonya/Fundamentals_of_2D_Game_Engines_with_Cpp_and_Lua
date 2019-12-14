@@ -5,7 +5,7 @@ class Entity;
 
 class Component {
   public:
-    Entity* m_owner;
+    Entity* owner;
 
     virtual ~Component() {}
     virtual void Initialize() {}

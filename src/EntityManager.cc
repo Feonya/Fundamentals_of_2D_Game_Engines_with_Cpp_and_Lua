@@ -3,51 +3,51 @@
 
 void EntityManager::ClearData()
 {
-  for (auto& entity : m_entities)
-    entity->Destroy();
+  for (auto& l_entity : entities)
+    l_entity->Destroy();
 }
 
 bool EntityManager::HasNoEntities()
 {
-  return m_entities.size() == 0;
+  return entities.size() == 0;
 }
 
 void EntityManager::Update(float f_deltaTime)
 {
-  for (auto& entity : m_entities)
-    entity->Update(f_deltaTime);
+  for (auto& l_entity : entities)
+    l_entity->Update(f_deltaTime);
 }
 
 void EntityManager::Render()
 {
-  for (auto& entity : m_entities)
-    entity->Render();
+  for (auto& l_entity : entities)
+    l_entity->Render();
 }
 
 Entity& EntityManager::AddEntity(std::string f_entityName)
 {
-  Entity* entity = new Entity(*this, f_entityName);
-  m_entities.emplace_back(entity);
-  return *entity;
+  Entity* l_entity = new Entity(*this, f_entityName);
+  entities.emplace_back(l_entity);
+  return *l_entity;
 }
 
 std::vector<Entity*> EntityManager::GetEntities() const
 {
-  return m_entities;
+  return entities;
 }
 
 unsigned EntityManager::GetEntityCount()
 {
-  return m_entities.size();
+  return entities.size();
 }
 
 void EntityManager::ListAllEntities() const
 {
-  unsigned i = 0;
-  for (auto& entity : m_entities)
+  unsigned l_i = 0;
+  for (auto& l_entity : entities)
   {
-    std::cout << "Entity[" << i << "]: " << entity->m_name << std::endl;
-    entity->ListAllComponents();
-    ++i;
+    std::cout << "Entity[" << l_i << "]: " << l_entity->name << std::endl;
+    l_entity->ListAllComponents();
+    ++l_i;
   }
 }

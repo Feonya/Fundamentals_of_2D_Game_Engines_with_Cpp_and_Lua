@@ -16,8 +16,8 @@ class AssetManager {
     SDL_Texture* GetTexture(std::string textureId);
 
   private:
-    EntityManager* m_manager;
-    std::map<std::string, SDL_Texture*> m_textures;
+    EntityManager* manager;
+    std::map<std::string, SDL_Texture*> textures;
 };
 
 #endif

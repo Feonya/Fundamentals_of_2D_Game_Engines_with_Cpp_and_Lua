@@ -3,9 +3,9 @@
 
 class Animation {
   public:
-    unsigned m_index;
-    unsigned m_numFrames;
-    unsigned m_animationSpeed;
+    unsigned index;
+    unsigned numFrames;
+    unsigned animationSpeed;
 
     Animation();
     Animation(unsigned f_index, unsigned f_numFrames, unsigned f_animationSpeed);

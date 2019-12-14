@@ -12,7 +12,7 @@ class EntityManager;
 
 class Entity {
   public:
-    std::string m_name;
+    std::string name;
 
     Entity(EntityManager& f_manager);
     Entity(EntityManager& f_manager, std::string f_name);
@@ -25,18 +25,18 @@ class Entity {
     template<typename T, typename... TArgs>
     T& AddComponent(TArgs&&... f_args)
     {
-      T* newComponent(new T(std::forward<TArgs>(f_args)...));
-      newComponent->m_owner = this;
-      m_components.emplace_back(newComponent);
-      m_componentTypeMap[&typeid(*newComponent)] = newComponent;
-      newComponent->Initialize();
-      return *newComponent;
+      T* l_newComponent(new T(std::forward<TArgs>(f_args)...));
+      l_newComponent->owner = this;
+      components.emplace_back(l_newComponent);
+      componentTypeMap[&typeid(*l_newComponent)] = l_newComponent;
+      l_newComponent->Initialize();
+      return *l_newComponent;
     }
 
     template<typename T>
     T* GetComponent()
     {
-      return static_cast<T*>(m_componentTypeMap[&typeid(T)]);
+      return static_cast<T*>(componentTypeMap[&typeid(T)]);
     }
 
     template<typename T>
@@ -49,10 +49,10 @@ class Entity {
     void ListAllComponents() const;
 
   private:
-    EntityManager& m_manager;
-    bool m_isActive;
-    std::vector<Component*>                     m_components;
-    std::map<const std::type_info*, Component*> m_componentTypeMap;
+    EntityManager& manager;
+    bool isActive;
+    std::vector<Component*>                     components;
+    std::map<const std::type_info*, Component*> componentTypeMap;
 };
 
 #endif

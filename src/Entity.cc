@@ -1,40 +1,40 @@
 #include <iostream>
 #include "Entity.h"
 
-Entity::Entity(EntityManager& f_manager) : m_manager(f_manager)
+Entity::Entity(EntityManager& f_manager) : manager(f_manager)
 {
-  m_isActive = true;
+  isActive = true;
 }
 
-Entity::Entity(EntityManager& f_manager, std::string f_name) : m_name(f_name), m_manager(f_manager)
+Entity::Entity(EntityManager& f_manager, std::string f_name) : name(f_name), manager(f_manager)
 {
-  m_isActive = true;
+  isActive = true;
 }
 
 void Entity::Update(float f_deltaTime)
 {
-  for (auto& component : m_components)
-    component->Update(f_deltaTime);
+  for (auto& l_component : components)
+    l_component->Update(f_deltaTime);
 }
 
 void Entity::Render()
 {
-  for (auto& component : m_components)
-    component->Render();
+  for (auto& l_component : components)
+    l_component->Render();
 }
 
 void Entity::Destroy()
 {
-  m_isActive = false;
+  isActive = false;
 }
 
 bool Entity::IsActive() const
 {
-  return m_isActive;
+  return isActive;
 }
 
 void Entity::ListAllComponents() const
 {
-  for (auto mapElement : m_componentTypeMap)
-    std::cout << "  Component<" << mapElement.first->name() << ">" << std::endl;
+  for (auto l_mapElement : componentTypeMap)
+    std::cout << "  Component<" << l_mapElement.first->name() << ">" << std::endl;
 }
