@@ -1,5 +1,7 @@
 #include <iostream>
 #include "EntityManager.h"
+#include "Collision.h"
+#include "components/ColliderComponent.h"
 
 void EntityManager::ClearData()
 {
@@ -14,8 +16,7 @@ bool EntityManager::HasNoEntities()
 
 void EntityManager::Update(float f_deltaTime)
 {
-  for (auto& l_entity : entities)
-    l_entity->Update(f_deltaTime);
+  for (auto& l_entity : entities) l_entity->Update(f_deltaTime);
 }
 
 void EntityManager::Render()
@@ -43,8 +44,7 @@ std::vector<Entity*> EntityManager::GetEntitiesByLayer(LayerType f_layer) const
 {
     std::vector<Entity*> l_selectedEntities;
     for (auto& l_entity : entities)
-      if (l_entity->layer == f_layer)
-        l_selectedEntities.emplace_back(l_entity);
+      if (l_entity->layer == f_layer) l_selectedEntities.emplace_back(l_entity);
 
     return l_selectedEntities;
 }
@@ -63,4 +63,23 @@ void EntityManager::ListAllEntities() const
     l_entity->ListAllComponents();
     ++l_i;
   }
+}
+
+std::string EntityManager::CheckEntityCollisions(Entity& f_myEntity) const
+{
+  ColliderComponent* l_myCollider = f_myEntity.GetComponent<ColliderComponent>();
+  for (auto& l_entity : entities)
+  {
+    if (l_entity->name.compare(f_myEntity.name) != 0 && l_entity->name.compare("tile") != 0)
+    {
+      if (l_entity->HasComponent<ColliderComponent>())
+      {
+        ColliderComponent* l_otherCollider = l_entity->GetComponent<ColliderComponent>();
+        if (Collision::CheckRectangleCollision(l_myCollider->collider, l_otherCollider->collider))
+            return l_otherCollider->colliderTag;
+      }
+    }
+  }
+
+  return std::string();
 }

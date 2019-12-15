@@ -4,6 +4,7 @@
 #include "components/TransformComponent.h"
 #include "components/SpriteComponent.h"
 #include "components/KeyboardControlComponent.h"
+#include "components/ColliderComponent.h"
 #include "Map.h"
 #include "Game.h"
 
@@ -64,6 +65,8 @@ void Game::LoadLevel(int f_levelNumber)
   assetManager->AddTexture("radar-image", std::string("assets/images/radar.png").c_str());
   assetManager->AddTexture("jungle-tiletexture",
       std::string("assets/tilemaps/jungle.png").c_str());
+  assetManager->AddTexture("collider-image",
+      std::string("assets/images/collision-texture.png").c_str());
 
   g_map = new Map("jungle-tiletexture", 2, 32);
   g_map->LoadMap("assets/tilemaps/jungle.map", 25, 20);
@@ -72,10 +75,12 @@ void Game::LoadLevel(int f_levelNumber)
   g_player.AddComponent<TransformComponent>(240, 106, 0, 0, 32, 32, 1);
   g_player.AddComponent<SpriteComponent>("chopper-image", 2, 90, true, false);
   g_player.AddComponent<KeyboardControlComponent>("up", "right", "down", "left", "shoot");
+  g_player.AddComponent<ColliderComponent>("player", 240, 106, 32, 32, true);
 
   Entity& l_tankEntity(g_manager.AddEntity("tank", ENEMY_LAYER));
   l_tankEntity.AddComponent<TransformComponent>(150, 495, 10, 0, 32, 32, 1);
   l_tankEntity.AddComponent<SpriteComponent>("tank-image");
+  l_tankEntity.AddComponent<ColliderComponent>("enemy", 150, 495, 32, 32, false);
 
   Entity& l_radarEntity(g_manager.AddEntity("radar", UI_LAYER));
   l_radarEntity.AddComponent<TransformComponent>(720, 15, 0, 0, 64, 64, 1);
@@ -118,6 +123,8 @@ void Game::Update()
   g_manager.Update(l_deltaTime);
 
   HandleCameraMovement();
+
+  CheckCollisions();
 }
 
 void Game::Render()
@@ -142,6 +149,16 @@ void Game:: HandleCameraMovement()
   camera.y = camera.y < 0 ? 0 : camera.y;
   camera.x = camera.x > camera.w ? camera.w : camera.x;
   camera.y = camera.y > camera.h ? camera.h : camera.y;
+}
+
+void Game::CheckCollisions()
+{
+  std::string collisionTagType = g_manager.CheckEntityCollisions(g_player);
+  if (collisionTagType.compare("enemy") == 0)
+  {
+    // TODO: Do something when collision is identified with an enemey.
+    isRunning = false;
+  }
 }
 
 void Game::Destroy()

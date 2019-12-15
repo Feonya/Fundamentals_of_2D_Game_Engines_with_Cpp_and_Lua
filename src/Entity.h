@@ -44,8 +44,7 @@ class Entity {
     template<typename T>
     bool HasComponent() const
     {
-      // TODO
-      return true;
+      return componentTypeMap.count(&typeid(T));
     }
 
     void ListAllComponents() const;

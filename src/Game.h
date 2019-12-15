@@ -28,11 +28,12 @@ class Game {
     void Render();
     void Destroy();
     void HandleCameraMovement();
+    void CheckCollisions();
 
   private:
     SDL_Window* window;
     bool isRunning;
-    int ticksLastFrame;
+    int  ticksLastFrame;
 };
 
 #endif
