@@ -5,11 +5,16 @@
 !_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
 !_TAG_PROGRAM_URL	https://ctags.io/	/official site/
 !_TAG_PROGRAM_VERSION	0.0.0	//
+ANIMATION_H	Animation.h	/^#define ANIMATION_H$/;"	d
 ASSETMANAGER_H	AssetManager.h	/^#define ASSETMANAGER_H$/;"	d
 AddComponent	Entity.h	/^    T& AddComponent(TArgs&&... f_args)$/;"	f	class:Entity	typeref:typename:T &
 AddEntity	EntityManager.cc	/^Entity& EntityManager::AddEntity(std::string f_entityName)$/;"	f	class:EntityManager	typeref:typename:Entity &
 AddTexture	AssetManager.cc	/^void AssetManager::AddTexture(std::string f_textureId, const char* f_filePath)$/;"	f	class:AssetManager	typeref:typename:void
-AssetManager	AssetManager.cc	/^AssetManager::AssetManager(EntityManager* f_manager) : m_manager(f_manager) {}$/;"	f	class:AssetManager
+AddTile	Map.cc	/^void Map::AddTile(int f_sourceRectX, int f_sourceRectY, int f_x, int f_y)$/;"	f	class:Map	typeref:typename:void
+Animation	Animation.cc	/^Animation::Animation() {}$/;"	f	class:Animation
+Animation	Animation.cc	/^Animation::Animation(unsigned f_index, unsigned f_numFrames, unsigned f_animationSpeed) :$/;"	f	class:Animation
+Animation	Animation.h	/^class Animation {$/;"	c
+AssetManager	AssetManager.cc	/^AssetManager::AssetManager(EntityManager* f_manager) : manager(f_manager) {}$/;"	f	class:AssetManager
 AssetManager	AssetManager.h	/^class AssetManager {$/;"	c
 COMPONENT_H	Component.h	/^#define COMPONENT_H$/;"	d
 CONSTANTS_H	constants.h	/^#define CONSTANTS_H$/;"	d
@@ -19,81 +24,138 @@ Component	Component.h	/^class Component {$/;"	c
 Destroy	Entity.cc	/^void Entity::Destroy()$/;"	f	class:Entity	typeref:typename:void
 Destroy	Game.cc	/^void Game::Destroy()$/;"	f	class:Game	typeref:typename:void
 Draw	TextureManager.cc	/^void TextureManager::Draw(SDL_Texture* f_texture, SDL_Rect f_sourceRectangle,$/;"	f	class:TextureManager	typeref:typename:void
+ENEMY_LAYER	constants.h	/^  ENEMY_LAYER      = 2,$/;"	e	enum:LayerType
 ENTITYMANAGER_H	EntityManager.h	/^#define ENTITYMANAGER_H$/;"	d
 ENTITY_H	Entity.h	/^#define ENTITY_H$/;"	d
-Entity	Entity.cc	/^Entity::Entity(EntityManager& f_manager) : m_manager(f_manager), m_isActive(true) {}$/;"	f	class:Entity
-Entity	Entity.cc	/^Entity::Entity(EntityManager& f_manager, std::string f_name) :$/;"	f	class:Entity
+Entity	Entity.cc	/^Entity::Entity(EntityManager& f_manager) : manager(f_manager)$/;"	f	class:Entity
+Entity	Entity.cc	/^Entity::Entity(EntityManager& f_manager, std::string f_name) : name(f_name), manager(f_manager)$/;"	f	class:Entity
 Entity	Entity.h	/^class Entity {$/;"	c
 EntityManager	EntityManager.h	/^class EntityManager {$/;"	c
+FPS	constants.h	/^const unsigned FPS = 60;$/;"	v	typeref:typename:const unsigned
+FRAME_TARGET_TIME	constants.h	/^const unsigned FRAME_TARGET_TIME = 1000 \/ FPS;$/;"	v	typeref:typename:const unsigned
 GAME_H	Game.h	/^#define GAME_H$/;"	d
-Game	Game.cc	/^Game::Game() : m_isRunning(false) {}$/;"	f	class:Game
+Game	Game.cc	/^Game::Game() { isRunning = false; }$/;"	f	class:Game
 Game	Game.h	/^class Game {$/;"	c
 GetComponent	Entity.h	/^    T* GetComponent()$/;"	f	class:Entity	typeref:typename:T *
 GetEntities	EntityManager.cc	/^std::vector<Entity*> EntityManager::GetEntities() const$/;"	f	class:EntityManager	typeref:typename:std::vector<Entity * >
-GetEntityCount	EntityManager.cc	/^unsigned int EntityManager::GetEntityCount()$/;"	f	class:EntityManager	typeref:typename:unsigned int
+GetEntityCount	EntityManager.cc	/^unsigned EntityManager::GetEntityCount()$/;"	f	class:EntityManager	typeref:typename:unsigned
+GetSDLKeyStringCode	components/KeyboardControlComponent.h	/^    std::string GetSDLKeyStringCode(std::string f_key)$/;"	f	class:KeyboardControlComponent	typeref:typename:std::string
 GetTexture	AssetManager.cc	/^SDL_Texture* AssetManager::GetTexture(std::string f_textureId)$/;"	f	class:AssetManager	typeref:typename:SDL_Texture *
 HandleInput	Game.cc	/^void Game::HandleInput()$/;"	f	class:Game	typeref:typename:void
+HasComponent	Entity.h	/^    bool HasComponent() const$/;"	f	class:Entity	typeref:typename:bool
 HasNoEntities	EntityManager.cc	/^bool EntityManager::HasNoEntities()$/;"	f	class:EntityManager	typeref:typename:bool
 Initialize	Component.h	/^    virtual void Initialize() {}$/;"	f	class:Component	typeref:typename:void
 Initialize	Game.cc	/^void Game::Initialize(int f_width, int f_height)$/;"	f	class:Game	typeref:typename:void
+Initialize	components/KeyboardControlComponent.h	/^    void Initialize() override$/;"	f	class:KeyboardControlComponent	typeref:typename:void
 Initialize	components/SpriteComponent.h	/^    void Initialize() override$/;"	f	class:SpriteComponent	typeref:typename:void
-Initialize	components/TransformComponent.h	/^    void Initialize() override$/;"	f	class:TransformComponent	typeref:typename:void
+Initialize	components/TransformComponent.h	/^    void Initialize() override {}$/;"	f	class:TransformComponent	typeref:typename:void
 IsActive	Entity.cc	/^bool Entity::IsActive() const$/;"	f	class:Entity	typeref:typename:bool
 IsRunning	Game.cc	/^bool Game::IsRunning() const$/;"	f	class:Game	typeref:typename:bool
+KEYBOARDCONTROLCOMPONENT_H	components/KeyboardControlComponent.h	/^#define KEYBOARDCONTROLCOMPONENT_H$/;"	d
+KeyboardControlComponent	components/KeyboardControlComponent.h	/^    KeyboardControlComponent() {}$/;"	f	class:KeyboardControlComponent
+KeyboardControlComponent	components/KeyboardControlComponent.h	/^    KeyboardControlComponent(std::string f_upKey, std::string f_rightKey, std::string f_downKey,$/;"	f	class:KeyboardControlComponent
+KeyboardControlComponent	components/KeyboardControlComponent.h	/^class KeyboardControlComponent : public Component {$/;"	c
+LayerType	constants.h	/^enum LayerType {$/;"	g
+ListAllComponents	Entity.cc	/^void Entity::ListAllComponents() const$/;"	f	class:Entity	typeref:typename:void
+ListAllEntities	EntityManager.cc	/^void EntityManager::ListAllEntities() const$/;"	f	class:EntityManager	typeref:typename:void
 LoadLevel	Game.cc	/^void Game::LoadLevel(int f_levelNumber)$/;"	f	class:Game	typeref:typename:void
+LoadMap	Map.cc	/^void Map::LoadMap(std::string f_filePath, int f_mapSizeX, int f_mapSizeY)$/;"	f	class:Map	typeref:typename:void
 LoadTexture	TextureManager.cc	/^SDL_Texture* TextureManager::LoadTexture(const char* f_fileName)$/;"	f	class:TextureManager	typeref:typename:SDL_Texture *
+MAP_H	Map.h	/^#define MAP_H$/;"	d
+Map	Map.cc	/^Map::Map(std::string f_textureId, int f_scale, int f_tileSize) :$/;"	f	class:Map
+Map	Map.h	/^class Map {$/;"	c
+NUM_LAYERS	constants.h	/^const unsigned NUM_LAYERS = 6;$/;"	v	typeref:typename:const unsigned
+PLAYER_LAYER	constants.h	/^  PLAYER_LAYER     = 3,$/;"	e	enum:LayerType
+PROJECTILE_LAYER	constants.h	/^  PROJECTILE_LAYER = 4,$/;"	e	enum:LayerType
+Play	components/SpriteComponent.h	/^    void Play(std::string f_animationName)$/;"	f	class:SpriteComponent	typeref:typename:void
 Render	Component.h	/^    virtual void Render() {}$/;"	f	class:Component	typeref:typename:void
 Render	Entity.cc	/^void Entity::Render()$/;"	f	class:Entity	typeref:typename:void
 Render	EntityManager.cc	/^void EntityManager::Render()$/;"	f	class:EntityManager	typeref:typename:void
 Render	Game.cc	/^void Game::Render()$/;"	f	class:Game	typeref:typename:void
 Render	components/SpriteComponent.h	/^    void Render()$/;"	f	class:SpriteComponent	typeref:typename:void
+Render	components/TileComponent.h	/^    void Render() override$/;"	f	class:TileComponent	typeref:typename:void
 Render	components/TransformComponent.h	/^    void Render() override {}$/;"	f	class:TransformComponent	typeref:typename:void
 SPRITECOMPONENT_H	components/SpriteComponent.h	/^#define SPRITECOMPONENT_H$/;"	d
 SetTexture	components/SpriteComponent.h	/^    void SetTexture(std::string f_assetTextureId)$/;"	f	class:SpriteComponent	typeref:typename:void
-SpriteComponent	components/SpriteComponent.h	/^    SpriteComponent(const char* f_filePath) { SetTexture(f_filePath); }$/;"	f	class:SpriteComponent
+SpriteComponent	components/SpriteComponent.h	/^    SpriteComponent(std::string f_assetTextureId)$/;"	f	class:SpriteComponent
+SpriteComponent	components/SpriteComponent.h	/^    SpriteComponent(std::string f_id, int f_numFrames, int f_animationSpeed, bool f_hasDirection/;"	f	class:SpriteComponent
 SpriteComponent	components/SpriteComponent.h	/^class SpriteComponent : public Component {$/;"	c
 TEXTUREMANAGER_H	TextureManager.h	/^#define TEXTUREMANAGER_H$/;"	d
+TILECOMPONENT_H	components/TileComponent.h	/^#define TILECOMPONENT_H$/;"	d
+TILEMAP_LAYER	constants.h	/^  TILEMAP_LAYER    = 0,$/;"	e	enum:LayerType
 TRANSFORMCOMPONENT_H	components/TransformComponent.h	/^#define TRANSFORMCOMPONENT_H$/;"	d
 TextureManager	TextureManager.h	/^class TextureManager {$/;"	c
+TileComponent	components/TileComponent.h	/^    TileComponent(int f_sourceRectX, int f_sourceRectY, int f_x, int f_y, int f_tileSize,$/;"	f	class:TileComponent
+TileComponent	components/TileComponent.h	/^class TileComponent : public Component {$/;"	c
 TransformComponent	components/TransformComponent.h	/^    TransformComponent(int f_posX, int f_posY, int f_velX, int f_velY, int f_w, int f_h, int f_s/;"	f	class:TransformComponent
 TransformComponent	components/TransformComponent.h	/^class TransformComponent : public Component {$/;"	c
+UI_LAYER	constants.h	/^  UI_LAYER         = 5$/;"	e	enum:LayerType
 Update	Component.h	/^    virtual void Update(float deltaTime) {}$/;"	f	class:Component	typeref:typename:void
 Update	Entity.cc	/^void Entity::Update(float f_deltaTime)$/;"	f	class:Entity	typeref:typename:void
 Update	EntityManager.cc	/^void EntityManager::Update(float f_deltaTime)$/;"	f	class:EntityManager	typeref:typename:void
 Update	Game.cc	/^void Game::Update()$/;"	f	class:Game	typeref:typename:void
+Update	components/KeyboardControlComponent.h	/^    void Update(float f_deltaTime) override$/;"	f	class:KeyboardControlComponent	typeref:typename:void
 Update	components/SpriteComponent.h	/^    void Update(float f_deltaTime) override$/;"	f	class:SpriteComponent	typeref:typename:void
+Update	components/TileComponent.h	/^    void Update(float f_deltaTime) override$/;"	f	class:TileComponent	typeref:typename:void
 Update	components/TransformComponent.h	/^    void Update(float f_deltaTime) override$/;"	f	class:TransformComponent	typeref:typename:void
+VEGETATION_LAYER	constants.h	/^  VEGETATION_LAYER = 1,$/;"	e	enum:LayerType
+WINDOW_HEIGHT	constants.h	/^const unsigned WINDOW_HEIGHT = 600;$/;"	v	typeref:typename:const unsigned
+WINDOW_WIDTH	constants.h	/^const unsigned WINDOW_WIDTH  = 800;$/;"	v	typeref:typename:const unsigned
+aniamtionSpeed	components/SpriteComponent.h	/^    int  aniamtionSpeed;$/;"	m	class:SpriteComponent	typeref:typename:int
+animationIndex	components/SpriteComponent.h	/^    unsigned                         animationIndex = 0;$/;"	m	class:SpriteComponent	typeref:typename:unsigned
+animationSpeed	Animation.h	/^    unsigned animationSpeed;$/;"	m	class:Animation	typeref:typename:unsigned
+animations	components/SpriteComponent.h	/^    std::map<std::string, Animation> animations;$/;"	m	class:SpriteComponent	typeref:typename:std::map<std::string,Animation>
 assetManager	Game.cc	/^AssetManager* Game::assetManager = new AssetManager(&g_manager);$/;"	m	class:Game	typeref:typename:AssetManager *
 assetManager	Game.h	/^    static AssetManager* assetManager;$/;"	m	class:Game	typeref:typename:AssetManager *
+componentTypeMap	Entity.h	/^    std::map<const std::type_info*, Component*> componentTypeMap;$/;"	m	class:Entity	typeref:typename:std::map<const std::type_info *,Component * >
+components	Entity.h	/^    std::vector<Component*>                     components;$/;"	m	class:Entity	typeref:typename:std::vector<Component * >
+currentAnimationName	components/SpriteComponent.h	/^    std::string                      currentAnimationName;$/;"	m	class:SpriteComponent	typeref:typename:std::string
+destinationRectangle	components/SpriteComponent.h	/^    SDL_Rect     destinationRectangle;$/;"	m	class:SpriteComponent	typeref:typename:SDL_Rect
+destinationRectangle	components/TileComponent.h	/^    SDL_Rect     destinationRectangle;$/;"	m	class:TileComponent	typeref:typename:SDL_Rect
+downKey	components/KeyboardControlComponent.h	/^    std::string downKey;$/;"	m	class:KeyboardControlComponent	typeref:typename:std::string
+entities	EntityManager.h	/^    std::vector<Entity*> entities;$/;"	m	class:EntityManager	typeref:typename:std::vector<Entity * >
+event	Game.cc	/^SDL_Event     Game::event;$/;"	m	class:Game	typeref:typename:SDL_Event
+event	Game.h	/^    static SDL_Event     event;$/;"	m	class:Game	typeref:typename:SDL_Event
 g_manager	Game.cc	/^EntityManager g_manager;$/;"	v	typeref:typename:EntityManager
+g_map	Game.cc	/^Map*          g_map;$/;"	v	typeref:typename:Map *
 height	components/TransformComponent.h	/^    int height;$/;"	m	class:TransformComponent	typeref:typename:int
-k_fps	constants.h	/^const unsigned int k_fps = 60;$/;"	v	typeref:typename:const unsigned int
-k_frameTargetTime	constants.h	/^const unsigned int k_frameTargetTime = 1000 \/ k_fps;$/;"	v	typeref:typename:const unsigned int
-k_windowHeight	constants.h	/^const unsigned int k_windowHeight = 600;$/;"	v	typeref:typename:const unsigned int
-k_windowWidth	constants.h	/^const unsigned int k_windowWidth   = 800;$/;"	v	typeref:typename:const unsigned int
-m_componentTypeMap	Entity.h	/^    std::map<const std::type_info*, Component*> m_componentTypeMap;$/;"	m	class:Entity	typeref:typename:std::map<const std::type_info *,Component * >
-m_components	Entity.h	/^    std::vector<Component*> m_components;$/;"	m	class:Entity	typeref:typename:std::vector<Component * >
-m_destinationRectangle	components/SpriteComponent.h	/^    SDL_Rect m_destinationRectangle;$/;"	m	class:SpriteComponent	typeref:typename:SDL_Rect
-m_entities	EntityManager.h	/^    std::vector<Entity*> m_entities;$/;"	m	class:EntityManager	typeref:typename:std::vector<Entity * >
-m_isActive	Entity.h	/^    bool m_isActive;$/;"	m	class:Entity	typeref:typename:bool
-m_isRunning	Game.h	/^    bool m_isRunning;$/;"	m	class:Game	typeref:typename:bool
-m_manager	AssetManager.h	/^    EntityManager* m_manager;$/;"	m	class:AssetManager	typeref:typename:EntityManager *
-m_manager	Entity.h	/^    EntityManager& m_manager;$/;"	m	class:Entity	typeref:typename:EntityManager &
-m_sourceRectangle	components/SpriteComponent.h	/^    SDL_Rect m_sourceRectangle;$/;"	m	class:SpriteComponent	typeref:typename:SDL_Rect
-m_texture	components/SpriteComponent.h	/^    SDL_Texture* m_texture;$/;"	m	class:SpriteComponent	typeref:typename:SDL_Texture *
-m_textures	AssetManager.h	/^    std::map<std::string, SDL_Texture*> m_textures;$/;"	m	class:AssetManager	typeref:typename:std::map<std::string,SDL_Texture * >
-m_ticksLastFrame	Game.h	/^    int m_ticksLastFrame;$/;"	m	class:Game	typeref:typename:int
-m_transform	components/SpriteComponent.h	/^    TransformComponent* m_transform;$/;"	m	class:SpriteComponent	typeref:typename:TransformComponent *
-m_window	Game.h	/^    SDL_Window* m_window;$/;"	m	class:Game	typeref:typename:SDL_Window *
+index	Animation.h	/^    unsigned index;$/;"	m	class:Animation	typeref:typename:unsigned
+isActive	Entity.h	/^    bool isActive;$/;"	m	class:Entity	typeref:typename:bool
+isAnimated	components/SpriteComponent.h	/^    bool isAnimated;$/;"	m	class:SpriteComponent	typeref:typename:bool
+isFixed	components/SpriteComponent.h	/^    bool isFixed;$/;"	m	class:SpriteComponent	typeref:typename:bool
+isRunning	Game.h	/^    bool isRunning;$/;"	m	class:Game	typeref:typename:bool
+leftKey	components/KeyboardControlComponent.h	/^    std::string leftKey;$/;"	m	class:KeyboardControlComponent	typeref:typename:std::string
 main	main.cc	/^int main(int argc, char* argv[])$/;"	f	typeref:typename:int
+manager	AssetManager.h	/^    EntityManager* manager;$/;"	m	class:AssetManager	typeref:typename:EntityManager *
+manager	Entity.h	/^    EntityManager& manager;$/;"	m	class:Entity	typeref:typename:EntityManager &
 name	Entity.h	/^    std::string name;$/;"	m	class:Entity	typeref:typename:std::string
+numFrames	Animation.h	/^    unsigned numFrames;$/;"	m	class:Animation	typeref:typename:unsigned
+numFrames	components/SpriteComponent.h	/^    int  numFrames;$/;"	m	class:SpriteComponent	typeref:typename:int
 owner	Component.h	/^    Entity* owner;$/;"	m	class:Component	typeref:typename:Entity *
+position	components/TileComponent.h	/^    glm::vec2    position;$/;"	m	class:TileComponent	typeref:typename:glm::vec2
 position	components/TransformComponent.h	/^    glm::vec2 position;$/;"	m	class:TransformComponent	typeref:typename:glm::vec2
 renderer	Game.cc	/^SDL_Renderer* Game::renderer;$/;"	m	class:Game	typeref:typename:SDL_Renderer *
 renderer	Game.h	/^    static SDL_Renderer* renderer;$/;"	m	class:Game	typeref:typename:SDL_Renderer *
+rightKey	components/KeyboardControlComponent.h	/^    std::string rightKey;$/;"	m	class:KeyboardControlComponent	typeref:typename:std::string
+scale	Map.h	/^    int         scale;$/;"	m	class:Map	typeref:typename:int
 scale	components/TransformComponent.h	/^    int scale;$/;"	m	class:TransformComponent	typeref:typename:int
+shootKey	components/KeyboardControlComponent.h	/^    std::string shootKey;$/;"	m	class:KeyboardControlComponent	typeref:typename:std::string
+sourceRectangle	components/SpriteComponent.h	/^    SDL_Rect     sourceRectangle;$/;"	m	class:SpriteComponent	typeref:typename:SDL_Rect
+sourceRectangle	components/TileComponent.h	/^    SDL_Rect     sourceRectangle;$/;"	m	class:TileComponent	typeref:typename:SDL_Rect
+sprite	components/KeyboardControlComponent.h	/^    SpriteComponent*    sprite;$/;"	m	class:KeyboardControlComponent	typeref:typename:SpriteComponent *
 spriteFlip	components/SpriteComponent.h	/^    SDL_RendererFlip spriteFlip = SDL_FLIP_NONE;$/;"	m	class:SpriteComponent	typeref:typename:SDL_RendererFlip
+texture	components/SpriteComponent.h	/^    SDL_Texture* texture;$/;"	m	class:SpriteComponent	typeref:typename:SDL_Texture *
+texture	components/TileComponent.h	/^    SDL_Texture* texture;$/;"	m	class:TileComponent	typeref:typename:SDL_Texture *
+textureId	Map.h	/^    std::string textureId;$/;"	m	class:Map	typeref:typename:std::string
+textures	AssetManager.h	/^    std::map<std::string, SDL_Texture*> textures;$/;"	m	class:AssetManager	typeref:typename:std::map<std::string,SDL_Texture * >
+ticksLastFrame	Game.h	/^    int  ticksLastFrame;$/;"	m	class:Game	typeref:typename:int
+tileSize	Map.h	/^    int         tileSize;$/;"	m	class:Map	typeref:typename:int
+transform	components/KeyboardControlComponent.h	/^    TransformComponent* transform;$/;"	m	class:KeyboardControlComponent	typeref:typename:TransformComponent *
+transform	components/SpriteComponent.h	/^    TransformComponent* transform;$/;"	m	class:SpriteComponent	typeref:typename:TransformComponent *
+upKey	components/KeyboardControlComponent.h	/^    std::string upKey;$/;"	m	class:KeyboardControlComponent	typeref:typename:std::string
 velocity	components/TransformComponent.h	/^    glm::vec2 velocity;$/;"	m	class:TransformComponent	typeref:typename:glm::vec2
 width	components/TransformComponent.h	/^    int width;$/;"	m	class:TransformComponent	typeref:typename:int
+window	Game.h	/^    SDL_Window* window;$/;"	m	class:Game	typeref:typename:SDL_Window *
 ~Component	Component.h	/^    virtual ~Component() {}$/;"	f	class:Component
 ~Game	Game.cc	/^Game::~Game() {}$/;"	f	class:Game
+~TileComponent	components/TileComponent.h	/^    ~TileComponent() { SDL_DestroyTexture(texture); }$/;"	f	class:TileComponent

@@ -15,6 +15,7 @@ class Game {
     static SDL_Renderer* renderer;
     static AssetManager* assetManager;
     static SDL_Event     event;
+    static SDL_Rect      camera;
 
     Game();
     ~Game();
@@ -26,11 +27,12 @@ class Game {
     void Update();
     void Render();
     void Destroy();
+    void HandleCameraMovement();
 
   private:
     SDL_Window* window;
     bool isRunning;
-    int  ticksLastFrame;
+    int ticksLastFrame;
 };
 
 #endif

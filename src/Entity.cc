@@ -6,7 +6,8 @@ Entity::Entity(EntityManager& f_manager) : manager(f_manager)
   isActive = true;
 }
 
-Entity::Entity(EntityManager& f_manager, std::string f_name) : name(f_name), manager(f_manager)
+Entity::Entity(EntityManager& f_manager, std::string f_name, LayerType f_layer) : 
+    name(f_name), layer(f_layer), manager(f_manager)
 {
   isActive = true;
 }

@@ -1,10 +1,21 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-const unsigned int k_windowWidth   = 800;
-const unsigned int k_windowHeight = 600;
+const unsigned WINDOW_WIDTH  = 800;
+const unsigned WINDOW_HEIGHT = 600;
 
-const unsigned int k_fps = 60;
-const unsigned int k_frameTargetTime = 1000 / k_fps;
+const unsigned FPS = 60;
+const unsigned FRAME_TARGET_TIME = 1000 / FPS;
+
+enum LayerType {
+  TILEMAP_LAYER    = 0,
+  VEGETATION_LAYER = 1,
+  ENEMY_LAYER      = 2,
+  PLAYER_LAYER     = 3,
+  PROJECTILE_LAYER = 4,
+  UI_LAYER         = 5
+};
+
+const unsigned NUM_LAYERS = 6;
 
 #endif

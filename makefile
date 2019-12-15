@@ -1,5 +1,5 @@
 build:
-	g++.exe -g -w -std=c++14 -Wfatal-errors \
+	g++.exe -w -std=c++14 -Wfatal-errors \
 	./src/*.cc \
 	-o game.exe \
 	-I"./include" \

@@ -23,9 +23,7 @@ class TransformComponent : public Component {
       scale    = f_s;
     }
 
-    void Initialize() override
-    {
-    }
+    void Initialize() override {}
 
     void Update(float f_deltaTime) override
     {
