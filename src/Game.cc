@@ -5,6 +5,7 @@
 #include "components/SpriteComponent.h"
 #include "components/KeyboardControlComponent.h"
 #include "components/ColliderComponent.h"
+#include "components/TextLabelComponent.h"
 #include "Map.h"
 #include "Game.h"
 
@@ -29,6 +30,12 @@ void Game::Initialize(int f_width, int f_height)
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
   {
     std::cerr << "Error initializing SDL." << std::endl;
+    return;
+  }
+
+  if (TTF_Init() != 0)
+  {
+    std::cerr << "Error initializing SDL TTF." << std::endl;
     return;
   }
 
@@ -68,6 +75,7 @@ void Game::LoadLevel(int f_levelNumber)
   assetManager->AddTexture("collider-image",
       std::string("assets/images/collision-texture.png").c_str());
   assetManager->AddTexture("heliport-image", std::string("assets/images/heliport.png").c_str());
+  assetManager->AddFont("charriot-font", std::string("assets/fonts/charriot.ttf").c_str(), 14);
 
   g_map = new Map("jungle-tiletexture", 2, 32);
   g_map->LoadMap("assets/tilemaps/jungle.map", 25, 20);
@@ -81,16 +89,20 @@ void Game::LoadLevel(int f_levelNumber)
   Entity& l_tankEntity(g_manager.AddEntity("tank", ENEMY_LAYER));
   l_tankEntity.AddComponent<TransformComponent>(150, 495, 10, 0, 32, 32, 1);
   l_tankEntity.AddComponent<SpriteComponent>("tank-image");
-  l_tankEntity.AddComponent<ColliderComponent>("enemy", 150, 495, 32, 32, false);
+  l_tankEntity.AddComponent<ColliderComponent>("enemy", 150, 495, 32, 32, true);
 
   Entity& l_radarEntity(g_manager.AddEntity("radar", UI_LAYER));
   l_radarEntity.AddComponent<TransformComponent>(720, 15, 0, 0, 64, 64, 1);
   l_radarEntity.AddComponent<SpriteComponent>("radar-image", 8, 150, false, true);
 
-  Entity& l_heliportEntity(g_manager.AddEntity("heliport-image", OBSTACLE_LAYER));
+  Entity& l_heliportEntity(g_manager.AddEntity("heliport", OBSTACLE_LAYER));
   l_heliportEntity.AddComponent<TransformComponent>(470, 420, 0, 0, 32, 32, 1);
   l_heliportEntity.AddComponent<SpriteComponent>("heliport-image");
-  l_heliportEntity.AddComponent<ColliderComponent>("level_complete", 470, 420, 32, 32, true);
+  l_heliportEntity.AddComponent<ColliderComponent>("level_complete", 470, 420, 32, 32, false);
+
+  Entity& l_labelLevelNameEntity(g_manager.AddEntity("label_level_name", UI_LAYER));
+  l_labelLevelNameEntity.AddComponent<TextLabelComponent>(10, 10, "First Level...",
+      "charriot-font", WHITE_COLOR);
 }
 
 void Game::HandleInput()
