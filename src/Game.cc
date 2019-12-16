@@ -67,6 +67,7 @@ void Game::LoadLevel(int f_levelNumber)
       std::string("assets/tilemaps/jungle.png").c_str());
   assetManager->AddTexture("collider-image",
       std::string("assets/images/collision-texture.png").c_str());
+  assetManager->AddTexture("heliport-image", std::string("assets/images/heliport.png").c_str());
 
   g_map = new Map("jungle-tiletexture", 2, 32);
   g_map->LoadMap("assets/tilemaps/jungle.map", 25, 20);
@@ -85,6 +86,11 @@ void Game::LoadLevel(int f_levelNumber)
   Entity& l_radarEntity(g_manager.AddEntity("radar", UI_LAYER));
   l_radarEntity.AddComponent<TransformComponent>(720, 15, 0, 0, 64, 64, 1);
   l_radarEntity.AddComponent<SpriteComponent>("radar-image", 8, 150, false, true);
+
+  Entity& l_heliportEntity(g_manager.AddEntity("heliport-image", OBSTACLE_LAYER));
+  l_heliportEntity.AddComponent<TransformComponent>(470, 420, 0, 0, 32, 32, 1);
+  l_heliportEntity.AddComponent<SpriteComponent>("heliport-image");
+  l_heliportEntity.AddComponent<ColliderComponent>("level_complete", 470, 420, 32, 32, true);
 }
 
 void Game::HandleInput()
@@ -153,12 +159,21 @@ void Game:: HandleCameraMovement()
 
 void Game::CheckCollisions()
 {
-  std::string collisionTagType = g_manager.CheckEntityCollisions(g_player);
-  if (collisionTagType.compare("enemy") == 0)
-  {
-    // TODO: Do something when collision is identified with an enemey.
-    isRunning = false;
-  }
+  CollisionType collisionType = g_manager.CheckCollisions();
+  if (collisionType == PLAYER_ENEMY_COLLISION)          ProcessGameOver();
+  if (collisionType == PLAYER_LEVEL_COMPLETE_COLLISION) ProcessNextLevel();
+}
+
+void Game::ProcessGameOver()
+{
+  std::cout << "Game Over" << std::endl;
+  isRunning = false;
+}
+
+void Game::ProcessNextLevel()
+{
+  std::cout << "Next Level" << std::endl;
+  isRunning = false;
 }
 
 void Game::Destroy()

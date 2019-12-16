@@ -29,6 +29,8 @@ class Game {
     void Destroy();
     void HandleCameraMovement();
     void CheckCollisions();
+    void ProcessGameOver();
+    void ProcessNextLevel();
 
   private:
     SDL_Window* window;

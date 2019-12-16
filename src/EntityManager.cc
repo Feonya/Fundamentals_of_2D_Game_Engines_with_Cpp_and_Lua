@@ -65,21 +65,65 @@ void EntityManager::ListAllEntities() const
   }
 }
 
-std::string EntityManager::CheckEntityCollisions(Entity& f_myEntity) const
+//std::string EntityManager::CheckEntityCollisions(Entity& f_myEntity) const
+//{
+//  ColliderComponent* l_myCollider = f_myEntity.GetComponent<ColliderComponent>();
+//  for (auto& l_entity : entities)
+//  {
+//    if (l_entity->name.compare(f_myEntity.name) != 0 && l_entity->name.compare("tile") != 0)
+//    {
+//      if (l_entity->HasComponent<ColliderComponent>())
+//      {
+//        ColliderComponent* l_otherCollider = l_entity->GetComponent<ColliderComponent>();
+//        if (Collision::CheckRectangleCollision(l_myCollider->collider, l_otherCollider->collider))
+//            return l_otherCollider->colliderTag;
+//      }
+//    }
+//  }
+//
+//  return std::string();
+//}
+
+CollisionType EntityManager::CheckCollisions() const
 {
-  ColliderComponent* l_myCollider = f_myEntity.GetComponent<ColliderComponent>();
-  for (auto& l_entity : entities)
+  for (auto& l_thisEntity : entities)
   {
-    if (l_entity->name.compare(f_myEntity.name) != 0 && l_entity->name.compare("tile") != 0)
+    if (l_thisEntity->HasComponent<ColliderComponent>())
     {
-      if (l_entity->HasComponent<ColliderComponent>())
+      ColliderComponent* l_thisCollider = l_thisEntity->GetComponent<ColliderComponent>();
+      for (auto& l_thatEntity : entities)
       {
-        ColliderComponent* l_otherCollider = l_entity->GetComponent<ColliderComponent>();
-        if (Collision::CheckRectangleCollision(l_myCollider->collider, l_otherCollider->collider))
-            return l_otherCollider->colliderTag;
+        if (l_thatEntity->HasComponent<ColliderComponent>() &&
+            l_thatEntity->name.compare(l_thisEntity->name) != 0)
+        {
+          ColliderComponent* l_thatCollider = l_thatEntity->GetComponent<ColliderComponent>();
+          if (Collision::CheckRectangleCollision(l_thisCollider->collider,
+              l_thatCollider->collider))
+          {
+            if (l_thisCollider->colliderTag.compare("player") == 0 &&
+                l_thatCollider->colliderTag.compare("enemy") == 0)
+              return PLAYER_ENEMY_COLLISION;
+            
+            if (l_thisCollider->colliderTag.compare("player") == 0 &&
+                l_thatCollider->colliderTag.compare("projectile") == 0)
+              return PLAYER_PROJECTILE_COLLISION;
+
+            if (l_thisCollider->colliderTag.compare("enemy") == 0 &&
+                l_thatCollider->colliderTag.compare("projectile") == 0)
+              return ENEMY_PROJECTILE_COLLISION;
+
+            if (l_thisCollider->colliderTag.compare("player") == 0 &&
+                l_thatCollider->colliderTag.compare("vegetation") == 0)
+              return PLAYER_VEGETATION_COLLISION;
+
+            if (l_thisCollider->colliderTag.compare("player") == 0 &&
+                l_thatCollider->colliderTag.compare("level_complete") == 0)
+              return PLAYER_LEVEL_COMPLETE_COLLISION;
+          }
+        }
       }
     }
   }
 
-  return std::string();
+  return NO_COLLISION;
 }
