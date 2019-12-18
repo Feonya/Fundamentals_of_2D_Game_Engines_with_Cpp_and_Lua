@@ -6,6 +6,7 @@
 #include "components/KeyboardControlComponent.h"
 #include "components/ColliderComponent.h"
 #include "components/TextLabelComponent.h"
+#include "components/ProjectileEmitterComponent.h"
 #include "Map.h"
 #include "Game.h"
 
@@ -75,6 +76,9 @@ void Game::LoadLevel(int f_levelNumber)
   assetManager->AddTexture("collider-image",
       std::string("assets/images/collision-texture.png").c_str());
   assetManager->AddTexture("heliport-image", std::string("assets/images/heliport.png").c_str());
+  assetManager->AddTexture("projectile-image",
+      std::string("assets/images/bullet-enemy.png").c_str());
+
   assetManager->AddFont("charriot-font", std::string("assets/fonts/charriot.ttf").c_str(), 14);
 
   g_map = new Map("jungle-tiletexture", 2, 32);
@@ -87,9 +91,15 @@ void Game::LoadLevel(int f_levelNumber)
   g_player.AddComponent<ColliderComponent>("player", 240, 106, 32, 32, true);
 
   Entity& l_tankEntity(g_manager.AddEntity("tank", ENEMY_LAYER));
-  l_tankEntity.AddComponent<TransformComponent>(150, 495, 10, 0, 32, 32, 1);
+  l_tankEntity.AddComponent<TransformComponent>(150, 495, 0, 0, 32, 32, 1);
   l_tankEntity.AddComponent<SpriteComponent>("tank-image");
   l_tankEntity.AddComponent<ColliderComponent>("enemy", 150, 495, 32, 32, true);
+
+  Entity& l_projectileEntity(g_manager.AddEntity("projectile", PROJECTILE_LAYER));
+  l_projectileEntity.AddComponent<TransformComponent>(150+16, 495+16, 0, 0, 4, 4, 1);
+  l_projectileEntity.AddComponent<SpriteComponent>("projectile-image");
+  l_projectileEntity.AddComponent<ColliderComponent>("projectile", 150+16, 495+16, 4, 4, false);
+  l_projectileEntity.AddComponent<ProjectileEmitterComponent>(50, 270, 200, true);
 
   Entity& l_radarEntity(g_manager.AddEntity("radar", UI_LAYER));
   l_radarEntity.AddComponent<TransformComponent>(720, 15, 0, 0, 64, 64, 1);
@@ -172,7 +182,7 @@ void Game:: HandleCameraMovement()
 void Game::CheckCollisions()
 {
   CollisionType collisionType = g_manager.CheckCollisions();
-  if (collisionType == PLAYER_ENEMY_COLLISION)          ProcessGameOver();
+  if (collisionType == PLAYER_PROJECTILE_COLLISION)     ProcessGameOver();
   if (collisionType == PLAYER_LEVEL_COMPLETE_COLLISION) ProcessNextLevel();
 }
 

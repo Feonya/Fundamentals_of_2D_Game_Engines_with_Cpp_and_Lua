@@ -16,8 +16,27 @@ bool EntityManager::HasNoEntities()
 
 void EntityManager::Update(float f_deltaTime)
 {
-  for (auto& l_entity : entities) l_entity->Update(f_deltaTime);
+  //for (auto& l_entity : entities)
+  //  l_entity->Update(f_deltaTime);
+
+  //DestroyInactiveEntities();
+
+  for (auto l_it = entities.begin(); l_it != entities.end(); ++l_it)
+  {
+    if ((*l_it)->IsActive()) (*l_it)->Update(f_deltaTime);
+    else                     entities.erase(l_it);
+
+  }
 }
+
+//void EntityManager::DestroyInactiveEntities()
+//{
+//  for (size_t l_i = 0; l_i < entities.size(); ++l_i)
+//  {
+//    if (!entities[l_i]->IsActive())
+//      entities.erase(entities.begin() + l_i);
+//  }
+//}
 
 void EntityManager::Render()
 {
@@ -103,7 +122,7 @@ CollisionType EntityManager::CheckCollisions() const
             if (l_thisCollider->colliderTag.compare("player") == 0 &&
                 l_thatCollider->colliderTag.compare("enemy") == 0)
               return PLAYER_ENEMY_COLLISION;
-            
+ 
             if (l_thisCollider->colliderTag.compare("player") == 0 &&
                 l_thatCollider->colliderTag.compare("projectile") == 0)
               return PLAYER_PROJECTILE_COLLISION;

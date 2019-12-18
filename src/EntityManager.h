@@ -2,6 +2,7 @@
 #define ENTITYMANAGER_H
 
 #include <vector>
+#include <iterator>
 #include "Entity.h"
 #include "Component.h"
 
@@ -17,6 +18,7 @@ class EntityManager {
     unsigned GetEntityCount() const;
     //std::string CheckEntityCollisions(Entity& f_entity) const;
     CollisionType CheckCollisions() const;
+    //void DestroyInactiveEntities();
 
     void ListAllEntities() const;
 
