@@ -16,6 +16,7 @@ SDL_Renderer* Game::renderer;
 SDL_Event     Game::event;
 SDL_Rect      Game::camera = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
 Map*          g_map;
+Entity*       g_player = NULL;
 
 Game::Game() { isRunning = false; }
 
@@ -55,64 +56,122 @@ void Game::Initialize(int f_width, int f_height)
     return;
   }
 
-  LoadLevel(0);
+  LoadLevel(1);
 
   isRunning = true;
   return;
 }
 
-Entity& g_player(g_manager.AddEntity("chopper", PLAYER_LAYER));
-
 void Game::LoadLevel(int f_levelNumber)
 {
-  /* Start including new assets to the assetManager list. */
-  assetManager->AddTexture("tank-image",
-      std::string("assets/images/tank-big-right.png").c_str());
-  assetManager->AddTexture("chopper-image",
-      std::string("assets/images/chopper-spritesheet.png").c_str());
-  assetManager->AddTexture("radar-image", std::string("assets/images/radar.png").c_str());
-  assetManager->AddTexture("jungle-tiletexture",
-      std::string("assets/tilemaps/jungle.png").c_str());
-  assetManager->AddTexture("collider-image",
-      std::string("assets/images/collision-texture.png").c_str());
-  assetManager->AddTexture("heliport-image", std::string("assets/images/heliport.png").c_str());
-  assetManager->AddTexture("projectile-image",
-      std::string("assets/images/bullet-enemy.png").c_str());
+  lua_State* l_lua = luaL_newstate();
 
-  assetManager->AddFont("charriot-font", std::string("assets/fonts/charriot.ttf").c_str(), 14);
+  luaopen_base(l_lua);
+  luaopen_os(l_lua);
+  luaopen_math(l_lua);
 
-  g_map = new Map("jungle-tiletexture", 2, 32);
-  g_map->LoadMap("assets/tilemaps/jungle.map", 25, 20);
+  std::string l_levelName = "level" + std::to_string(f_levelNumber);
+  int l_rst = luaL_dofile(l_lua, ("assets/scripts/" + l_levelName + ".lua").c_str());
+  if (l_rst == LUA_OK)
+  {
+    lua_getglobal(l_lua, l_levelName.c_str());
 
-  /* Start including entities and also components to them. */
-  g_player.AddComponent<TransformComponent>(240, 106, 0, 0, 32, 32, 1);
-  g_player.AddComponent<SpriteComponent>("chopper-image", 2, 90, true, false);
-  g_player.AddComponent<KeyboardControlComponent>("up", "right", "down", "left", "shoot");
-  g_player.AddComponent<ColliderComponent>("player", 240, 106, 32, 32, true);
+    /**************************************/
+    /* Loads Assets From Lua Config File. */
+    /**************************************/
+    lua_pushstring(l_lua, "assets");
+    lua_gettable(l_lua, -2);
 
-  Entity& l_tankEntity(g_manager.AddEntity("tank", ENEMY_LAYER));
-  l_tankEntity.AddComponent<TransformComponent>(150, 495, 0, 0, 32, 32, 1);
-  l_tankEntity.AddComponent<SpriteComponent>("tank-image");
-  l_tankEntity.AddComponent<ColliderComponent>("enemy", 150, 495, 32, 32, true);
+    lua_pushnil(l_lua);
+    while (lua_next(l_lua, -2) != 0)
+    {
+      lua_pushstring(l_lua, "type");
+      lua_gettable(l_lua, -2);
+      std::string l_assetType = std::string(lua_tostring(l_lua, -1));
+      lua_pop(l_lua, 1);
 
-  Entity& l_projectileEntity(g_manager.AddEntity("projectile", PROJECTILE_LAYER));
-  l_projectileEntity.AddComponent<TransformComponent>(150+16, 495+16, 0, 0, 4, 4, 1);
-  l_projectileEntity.AddComponent<SpriteComponent>("projectile-image");
-  l_projectileEntity.AddComponent<ColliderComponent>("projectile", 150+16, 495+16, 4, 4, false);
-  l_projectileEntity.AddComponent<ProjectileEmitterComponent>(50, 270, 200, true);
+      if (l_assetType.compare("texture") == 0)
+      {
+        lua_pushstring(l_lua, "id");
+        lua_gettable(l_lua, -2);
+        std::string l_assetId = lua_tostring(l_lua, -1);
+        lua_pop(l_lua, 1);
 
-  Entity& l_radarEntity(g_manager.AddEntity("radar", UI_LAYER));
-  l_radarEntity.AddComponent<TransformComponent>(720, 15, 0, 0, 64, 64, 1);
-  l_radarEntity.AddComponent<SpriteComponent>("radar-image", 8, 150, false, true);
+        lua_pushstring(l_lua, "file");
+        lua_gettable(l_lua, -2);
+        std::string l_assetFile = lua_tostring(l_lua, -1);
+        lua_pop(l_lua, 1);
 
-  Entity& l_heliportEntity(g_manager.AddEntity("heliport", OBSTACLE_LAYER));
-  l_heliportEntity.AddComponent<TransformComponent>(470, 420, 0, 0, 32, 32, 1);
-  l_heliportEntity.AddComponent<SpriteComponent>("heliport-image");
-  l_heliportEntity.AddComponent<ColliderComponent>("level_complete", 470, 420, 32, 32, false);
+        assetManager->AddTexture(l_assetId, l_assetFile.c_str());
+      }
+      else if (l_assetType.compare("font") == 0)
+      {
+        lua_pushstring(l_lua, "id");
+        lua_gettable(l_lua, -2);
+        std::string l_assetId = lua_tostring(l_lua, -1);
+        lua_pop(l_lua, 1);
 
-  Entity& l_labelLevelNameEntity(g_manager.AddEntity("label_level_name", UI_LAYER));
-  l_labelLevelNameEntity.AddComponent<TextLabelComponent>(10, 10, "First Level...",
-      "charriot-font", WHITE_COLOR);
+        lua_pushstring(l_lua, "file");
+        lua_gettable(l_lua, -2);
+        std::string l_assetFile = lua_tostring(l_lua, -1);
+        lua_pop(l_lua, 1);
+
+        lua_pushstring(l_lua, "fontSize");
+        lua_gettable(l_lua, -2);
+        int l_assetFontSize = lua_tonumber(l_lua, -1);
+        lua_pop(l_lua, 1);
+
+        assetManager->AddFont(l_assetId, l_assetFile.c_str(), l_assetFontSize);
+      }
+
+      lua_pop(l_lua, 1);
+    }
+
+    lua_settop(l_lua, 0);
+    lua_getglobal(l_lua, l_levelName.c_str());
+
+    /***********************************/
+    /* Loads Map From Lua Config File. */
+    /***********************************/
+    lua_pushstring(l_lua, "map");
+    lua_gettable(l_lua, -2);
+
+    lua_pushstring(l_lua, "textureAssetId");
+    lua_gettable(l_lua, -2);
+    std::string l_mapTextureId = lua_tostring(l_lua, -1);
+    lua_pop(l_lua, 1);
+
+    lua_pushstring(l_lua, "file");
+    lua_gettable(l_lua, -2);
+    std::string l_mapFile = lua_tostring(l_lua, -1);
+    lua_pop(l_lua, 1);
+
+    lua_pushstring(l_lua, "scale");
+    lua_gettable(l_lua, -2);
+    int l_mapScale = lua_tonumber(l_lua, -1);
+    lua_pop(l_lua, 1);
+
+    lua_pushstring(l_lua, "tileSize");
+    lua_gettable(l_lua, -2);
+    int l_mapTileSize = lua_tonumber(l_lua, -1);
+    lua_pop(l_lua, 1);
+
+    lua_pushstring(l_lua, "mapSizeX");
+    lua_gettable(l_lua, -2);
+    int l_mapSizeX = lua_tonumber(l_lua, -1);
+    lua_pop(l_lua, 1);
+
+    lua_pushstring(l_lua, "mapSizeY");
+    lua_gettable(l_lua, -2);
+    int l_mapSizeY = lua_tonumber(l_lua, -1);
+    lua_pop(l_lua, 1);
+
+    g_map = new Map {l_mapTextureId , l_mapScale, l_mapTileSize};
+    g_map->LoadMap(l_mapFile, l_mapSizeX, l_mapSizeY);
+  }
+  else
+    std::cout << "Error doing Lua file." << std::endl;
+
 }
 
 void Game::HandleInput()
@@ -168,15 +227,18 @@ void Game::Render()
 
 void Game:: HandleCameraMovement()
 {
-  TransformComponent* l_mainPlayerTransform = g_player.GetComponent<TransformComponent>();
+  if (g_player)
+  {
+    TransformComponent* l_mainPlayerTransform = g_player->GetComponent<TransformComponent>();
 
-  camera.x = l_mainPlayerTransform->position.x - (WINDOW_WIDTH  / 2);
-  camera.y = l_mainPlayerTransform->position.y - (WINDOW_HEIGHT / 2);
+    camera.x = l_mainPlayerTransform->position.x - (WINDOW_WIDTH  / 2);
+    camera.y = l_mainPlayerTransform->position.y - (WINDOW_HEIGHT / 2);
 
-  camera.x = camera.x < 0 ? 0 : camera.x;
-  camera.y = camera.y < 0 ? 0 : camera.y;
-  camera.x = camera.x > camera.w ? camera.w : camera.x;
-  camera.y = camera.y > camera.h ? camera.h : camera.y;
+    camera.x = camera.x < 0 ? 0 : camera.x;
+    camera.y = camera.y < 0 ? 0 : camera.y;
+    camera.x = camera.x > camera.w ? camera.w : camera.x;
+    camera.y = camera.y > camera.h ? camera.h : camera.y;
+  }
 }
 
 void Game::CheckCollisions()
